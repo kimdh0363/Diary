@@ -1,5 +1,6 @@
 package com.example.Diary.domain.member.service;
 
+import com.example.Diary.domain.member.dto.MemberLoginRequestDto;
 import com.example.Diary.domain.member.dto.MemberSignUpRequestDto;
 import com.example.Diary.domain.member.entity.Member;
 import com.example.Diary.domain.member.repository.MemberRepository;
@@ -23,7 +24,6 @@ public class MemberService {
         String encodedPassword = passwordEncoder.encode(signUpRequestDto.password());
 
         Member member = Member.builder()
-                .username(signUpRequestDto.username())
                 .email(signUpRequestDto.email())
                 .password(encodedPassword)
                 .build();
@@ -31,4 +31,6 @@ public class MemberService {
         memberRepository.save(member);
 
     }
+
+
 }

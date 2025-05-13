@@ -14,22 +14,25 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
     private String email;
 
+    private String role;
+
     @Builder
-    public Member(String username, String email, String password) {
-        this.username = username;
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.role = "ROLE_USER";
+    }
+
+    @Builder
+    public Member(String email, String password, String role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 }

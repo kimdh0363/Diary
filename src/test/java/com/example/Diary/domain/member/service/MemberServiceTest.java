@@ -38,7 +38,6 @@ class MemberServiceTest {
 
         Member member = memberRepository.findByEmail(signUpRequestDto.email());
 
-        assertThat(member.getUsername()).isEqualTo(signUpRequestDto.username());
         assertThat(member.getEmail()).isEqualTo(signUpRequestDto.email());
         assertThat(passwordEncoder.matches(signUpRequestDto.password(), member.getPassword())).isTrue();
     }
@@ -52,7 +51,6 @@ class MemberServiceTest {
         memberService.signUp(signUpRequestDto);
 
         MemberSignUpRequestDto duplicatedEmailSignUpRequestDto = MemberSignUpRequestDto.builder()
-                .username("Test123")
                 .email(signUpRequestDto.email())
                 .password("Test123")
                 .build();
@@ -64,7 +62,6 @@ class MemberServiceTest {
 
     static MemberSignUpRequestDto createMember() {
         return MemberSignUpRequestDto.builder()
-                .username("Test")
                 .email("Test@Test.com")
                 .password("Test")
                 .build();

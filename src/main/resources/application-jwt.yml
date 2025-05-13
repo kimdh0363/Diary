@@ -1,0 +1,6 @@
+spring:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY:f061cd376d59b778bce22bb3e4740b0a3618ecb2a2b601e0ea7ec7bed515acab}
+    expiration-time:
+      access-token: ${JWT_EXPIRATION_TIME_ACCESS_TOKEN:3600}
+      refresh-token: ${JWT_EXPIRATION_TIME_REFRESH_TOKEN:7776000}
