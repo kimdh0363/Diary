@@ -1,6 +1,7 @@
 package com.example.Diary.global.jwt.detail;
 
 import com.example.Diary.domain.member.entity.Member;
+import com.example.Diary.global.jwt.domain.RefreshToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,6 +43,13 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    public RefreshToken getRefreshToken(String refreshToken) {
+        return RefreshToken.builder()
+                .email(this.getUsername())
+                .token(refreshToken)
+                .build();
     }
 
     @Override

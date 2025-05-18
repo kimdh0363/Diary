@@ -1,47 +1,76 @@
 package com.example.Diary.global.jwt.token;
 
-import com.example.Diary.global.jwt.dto.TokenResponse;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
-import java.util.stream.Collectors;
 
-@Slf4j
 @Component
 public class JwtTokenProvider {
+
     private final SecretKey secretKey;
 
+    private final long ACCESS_TOKEN_TIME = 1000L*60*30;
+    private final long REFRESH_TOKEN_TIME = 1000L*60*60*24*12;
 
-    public JwtTokenProvider(@Value("${spring.jwt.secret-key}") String secretKey) {
-        this.secretKey = new SecretKeySpec(
-                secretKey.getBytes(StandardCharsets.UTF_8),
-                Jwts.SIG.HS256
-                        .key()
-                        .build()
-                        .getAlgorithm());
+    public JwtTokenProvider(@Value("${spring.jwt.secret-key}") String key) {
+        this.secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
     }
 
+    public String createAccessToken(String email, String role) {
+        return Jwts.builder()
+                .claim("email", email)
+                .claim("role",role)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_TIME))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
 
+    public String createRefreshToken(String email) {
+        return Jwts.builder()
+                .claim("email", email)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis()+REFRESH_TOKEN_TIME))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
 
-    private Claims getClaimsFromToken(String token) {
+    public String getEmail(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
-                .getPayload();
+                .getPayload()
+                .get("email",String.class);
     }
+
+    public boolean isExpired(String token) {
+
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+
+            return claims.getExpiration().before(new Date());
+        }catch (Exception e) {
+
+            return true;
+
+        }
+    }
+    public long getAccessTokenTime() {
+        return ACCESS_TOKEN_TIME;
+    }
+
 
 }
