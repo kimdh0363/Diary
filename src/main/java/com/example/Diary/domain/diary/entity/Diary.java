@@ -20,7 +20,7 @@ public class Diary {
 
     private String content;
 
-    @JoinColumn
+    @JoinColumn(name = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 

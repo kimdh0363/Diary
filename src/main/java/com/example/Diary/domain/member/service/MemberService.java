@@ -32,5 +32,7 @@ public class MemberService {
 
     }
 
+    public void getMemberInfo()
+
 
 }

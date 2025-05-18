@@ -39,11 +39,12 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = getTokenHeader(request);
         if(token!=null && jwtTokenProvider.isExpired(token)) {
 
-            String refreshToken = jwtTokenProvider.getEmail(token);
+            String email = jwtTokenProvider.getEmail(token);
+            Optional<RefreshToken> refreshTokenOptional1 = refreshTokenRepository.findByEmail(email);
+            String refreshToken = String.valueOf(refreshTokenOptional1.get());
 
             if(refreshToken != null && jwtTokenProvider.isExpired(refreshToken)) {
 
-                String email = jwtTokenProvider.getEmail(refreshToken);
 
                 Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findByEmail(email);
 
@@ -55,8 +56,6 @@ public class JwtFilter extends OncePerRequestFilter {
                     return;
                 }
             }
-
-            String email = jwtTokenProvider.getEmail(token);
 
             CustomUserDetails customUserDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
 
