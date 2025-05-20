@@ -34,16 +34,36 @@ public class DiaryService {
     }
 
     @Transactional
-    public void update(DiaryUpdateRequestDto updateRequestDto, Long memberId, Long diaryId) {
-        Diary diary = diaryRepository.findById(diaryId)
-                .orElseThrow(()->new IllegalArgumentException("존재하지 않는 일기입니다."));
+    public void updateDiary(DiaryUpdateRequestDto updateRequestDto, Long memberId, Long diaryId) {
+        Diary diary = getDiary(diaryId);
 
-        if(!Objects.equals(diary.getMember().getId(), memberId)) {
-            throw new IllegalArgumentException("수정권한이 없는 회원입니다.");
-        }
+        validateMemberId(diary.getMember().getId(), memberId);
 
-        diary.updateDiary(updateRequestDto.content());
+        diary.diaryUpdate(updateRequestDto.title(), updateRequestDto.content());
 
     }
 
+    @Transactional
+    public void deleteDiary(Long diaryId, Long memberId) {
+        Diary diary = getDiary(diaryId);
+
+        validateMemberId(diary.getMember().getId(),memberId);
+
+        diaryRepository.delete(diary);
+
+
+    }
+
+
+    public Diary getDiary(Long diaryId) {
+        return diaryRepository.findById(diaryId)
+                .orElseThrow(()->new IllegalArgumentException("존재하지 않는 일기입니다."));
+
+    }
+
+    public void validateMemberId(Long diaryMemberId, Long memberId) {
+        if(!diaryMemberId.equals(memberId)) {
+            throw new IllegalArgumentException("해당 일기에 대한 권한이 없는 회원입니다.");
+        }
+    }
 }

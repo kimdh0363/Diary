@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record DiaryUpdateRequestDto(
+        String title,
         String content
 ) {
 }
