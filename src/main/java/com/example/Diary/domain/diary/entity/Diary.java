@@ -1,6 +1,7 @@
 package com.example.Diary.domain.diary.entity;
 
 import com.example.Diary.domain.member.entity.Member;
+import com.example.Diary.global.template.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Diary {
+public class Diary extends BaseTimeEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -29,6 +30,10 @@ public class Diary {
         this.title = title;
         this.content = content;
         this.member = member;
+    }
+
+    public void updateDiary(String content) {
+        this.content = content;
     }
 
 }
