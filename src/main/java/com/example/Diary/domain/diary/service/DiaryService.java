@@ -105,6 +105,19 @@ public class DiaryService {
         );
     }
 
+    public DiaryInfoResponse getPublicDiary(Long diaryId) {
+        Diary diary = diaryRepository.findByVisibilityAndId(Visibility.PUBLIC, diaryId)
+                .orElseThrow(()-> new IllegalArgumentException("해당 일기는 공개되어 있지 않거나 존재하지 않습니다."));
+
+        return DiaryInfoResponse.builder()
+                .boardId(diary.getId())
+                .memberId(diary.getMember().getId())
+                .title(diary.getTitle())
+                .content(diary.getContent())
+                .createdAt(diary.getCreatedAt())
+                .build();
+    }
+
 
     public Diary findDiary(Long diaryId) {
         return diaryRepository.findById(diaryId)

@@ -30,20 +30,20 @@ public class DiaryController {
 
     }
 
-    @PatchMapping("/{diaryId}")
-    public ResponseEntity<String> updateDiary(@RequestBody DiaryUpdateRequestDto updateRequestDto, @MemberId Long memberId, @PathVariable("diaryId") Long diaryId) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> updateDiary(@RequestBody DiaryUpdateRequestDto updateRequestDto, @MemberId Long memberId, @PathVariable("id") Long diaryId) {
         diaryService.updateDiary(updateRequestDto,memberId,diaryId);
         return ResponseEntity.ok("일기 수정 완료");
     }
 
-    @DeleteMapping("/{diaryId}")
-    public ResponseEntity<String> deleteDiary(@PathVariable("diaryId") Long diaryId, @MemberId Long memberId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteDiary(@PathVariable("id") Long diaryId, @MemberId Long memberId) {
         diaryService.deleteDiary(diaryId,memberId);
         return ResponseEntity.ok("일기 삭제 완료");
     }
 
-    @GetMapping("/me/{diaryId}")
-    public ResponseEntity<DiaryInfoResponse> getDiary(@PathVariable("diaryId") Long diaryId, @MemberId Long memberId) {
+    @GetMapping("/me/{id}")
+    public ResponseEntity<DiaryInfoResponse> getDiary(@PathVariable("id") Long diaryId, @MemberId Long memberId) {
         DiaryInfoResponse diaryInfoResponse = diaryService.getDiary(diaryId,memberId);
         return new ResponseEntity<>(diaryInfoResponse,HttpStatus.OK);
     }
@@ -71,6 +71,11 @@ public class DiaryController {
         return new ResponseEntity<>(responsePage,HttpStatus.OK);
     }
 
-    @GetMapping()
+    @GetMapping("/public/{id}")
+    public ResponseEntity<DiaryInfoResponse> getPublicDiary(@PathVariable("id") Long diaryId) {
+        DiaryInfoResponse response = diaryService.getPublicDiary(diaryId);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }

@@ -9,9 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary,Long> {
     Page<Diary> findAllByMember(Member member, Pageable pageable);
 
     Page<Diary> findAllByVisibility(Visibility visibility, Pageable pageable);
+
+    Optional<Diary> findByVisibilityAndId(Visibility visibility, Long diaryId);
 }
