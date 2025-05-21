@@ -25,6 +25,8 @@ public class Diary extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
+
+
     @Builder
     private Diary(String title, String content, Member member) {
         this.title = title;

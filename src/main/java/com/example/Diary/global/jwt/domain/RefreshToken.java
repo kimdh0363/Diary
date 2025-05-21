@@ -22,10 +22,6 @@ public class RefreshToken {
         this.token = token;
     }
 
-    public String getRefreshToken() {
-        return this.token;
-    }
-
     public void updateRefreshToken(String newToken) {
         this.token = newToken;
     }

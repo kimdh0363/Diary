@@ -65,6 +65,7 @@ public class MemberService {
                         .email(refreshTokenOptional.get().getEmail())
                         .token(refreshTokenOptional.get().getToken())
                         .build();
+                // refreshtoken 에 멤버 조인해서 쉽게 리팩토링
 
                 refreshTokenRepository.delete(refreshToken);
 

@@ -34,30 +34,10 @@ public class CustomUserDetails implements UserDetails {
         return member.getEmail();
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
     public RefreshToken getRefreshToken(String refreshToken) {
         return RefreshToken.builder()
                 .email(this.getUsername())
                 .token(refreshToken)
                 .build();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }

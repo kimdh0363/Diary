@@ -10,14 +10,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -36,7 +33,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             ObjectMapper objectMapper = new ObjectMapper();
             MemberLoginRequestDto loginRequest = objectMapper.readValue(request.getInputStream(), MemberLoginRequestDto.class);
 
-            System.out.println("🟢 로그인 시도 - 이메일: " + loginRequest.email());
+            System.out.println("로그인 시도 - 이메일: " + loginRequest.email());
 
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
@@ -63,7 +60,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         if(refreshTokenOptional.isEmpty()) {
             refreshTokenRepository.save(new RefreshToken(email, refreshToken));
         }else {
-            refreshToken = refreshTokenOptional.get().getRefreshToken();
+            refreshToken = refreshTokenOptional.get().getToken();
         }
 
         TokenResponseDto tokenDto = TokenResponseDto.builder()
@@ -83,7 +80,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-        System.out.println("🔴 로그인 실패: " + failed.getMessage());
+        System.out.println("로그인 실패: " + failed.getMessage());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
 
