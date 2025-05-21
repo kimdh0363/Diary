@@ -25,18 +25,24 @@ public class Diary extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
+    private Visibility visibility;
 
 
     @Builder
-    private Diary(String title, String content, Member member) {
+    private Diary(String title, String content, Member member, Visibility visibility) {
         this.title = title;
         this.content = content;
         this.member = member;
+        this.visibility = visibility;
     }
 
     public void diaryUpdate(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void updateVisibility(Visibility visibility) {
+        this.visibility = visibility;
     }
 
 }

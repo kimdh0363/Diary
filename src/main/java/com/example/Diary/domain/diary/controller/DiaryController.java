@@ -59,5 +59,18 @@ public class DiaryController {
         return new ResponseEntity<>(responsePage, HttpStatus.OK);
     }
 
+    @GetMapping("/public")
+    public ResponseEntity<Page<DiaryInfoResponse>> getAllPublicDiaries(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size,Sort.by("id").descending());
+
+        Page<DiaryInfoResponse> responsePage = diaryService.getAllPublicDiaries(pageable);
+
+        return new ResponseEntity<>(responsePage,HttpStatus.OK);
+    }
+
+    @GetMapping()
 
 }

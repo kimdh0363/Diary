@@ -4,6 +4,7 @@ import com.example.Diary.domain.diary.dto.DiaryCreateRequestDto;
 import com.example.Diary.domain.diary.dto.DiaryInfoResponse;
 import com.example.Diary.domain.diary.dto.DiaryUpdateRequestDto;
 import com.example.Diary.domain.diary.entity.Diary;
+import com.example.Diary.domain.diary.entity.Visibility;
 import com.example.Diary.domain.diary.repository.DiaryRepository;
 import com.example.Diary.domain.member.entity.Member;
 import com.example.Diary.domain.member.repository.MemberRepository;
@@ -31,6 +32,7 @@ public class DiaryService {
         Diary diary = Diary.builder()
                 .title(diaryCreateRequestDto.title())
                 .content(diaryCreateRequestDto.content())
+                .visibility(Visibility.valueOf(diaryCreateRequestDto.visibility()))
                 .member(member)
                 .build();
 
@@ -88,6 +90,19 @@ public class DiaryService {
                         .createdAt(diary.getCreatedAt())
                         .build());
 
+    }
+
+    public Page<DiaryInfoResponse> getAllPublicDiaries(Pageable pageable) {
+        Page<Diary> diaries = diaryRepository.findAllByVisibility(Visibility.PUBLIC, pageable);
+
+        return diaries.map(diary -> DiaryInfoResponse.builder()
+                .boardId(diary.getId())
+                .memberId(diary.getMember().getId())
+                .title(diary.getTitle())
+                .content(diary.getContent())
+                .createdAt(diary.getCreatedAt())
+                .build()
+        );
     }
 
 
